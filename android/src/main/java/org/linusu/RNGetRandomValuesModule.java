@@ -11,6 +11,8 @@ import com.facebook.react.module.annotations.ReactModule;
 public class RNGetRandomValuesModule extends NativeRNGetRandomValuesSpec {
   protected static final String NAME = "RNGetRandomValues";
 
+  private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
   public RNGetRandomValuesModule(ReactApplicationContext reactContext) {
     super(reactContext);
   }
@@ -23,9 +25,8 @@ public class RNGetRandomValuesModule extends NativeRNGetRandomValuesSpec {
   @Override
   public String getRandomBase64(double byteLength) {
     byte[] data = new byte[(int) byteLength];
-    SecureRandom random = new SecureRandom();
 
-    random.nextBytes(data);
+    SECURE_RANDOM.nextBytes(data);
 
     return Base64.encodeToString(data, Base64.NO_WRAP);
   }
