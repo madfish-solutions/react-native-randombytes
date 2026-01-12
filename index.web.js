@@ -1,1 +1,1 @@
-// The web platform already has support for getRandomValues
+// TODO: check support for all methods in web platform

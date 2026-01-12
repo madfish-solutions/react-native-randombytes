@@ -1,6 +1,10 @@
 const base64Decode = require('fast-base64-decode')
 const { TurboModuleRegistry } = require('react-native')
 
+if (typeof Buffer === 'undefined') {
+  global.Buffer = require('buffer').Buffer
+}
+
 class TypeMismatchError extends Error {}
 class QuotaExceededError extends Error {}
 
@@ -35,7 +39,7 @@ function getRandomBase64 (byteLength) {
 /**
  * @param {Int8Array|Uint8Array|Int16Array|Uint16Array|Int32Array|Uint32Array|Uint8ClampedArray} array
  */
-function getRandomValues (array) {
+export function getRandomValues (array) {
   if (!(array instanceof Int8Array || array instanceof Uint8Array || array instanceof Int16Array || array instanceof Uint16Array || array instanceof Int32Array || array instanceof Uint32Array || array instanceof Uint8ClampedArray)) {
     throw new TypeMismatchError('Expected an integer array')
   }
@@ -72,10 +76,30 @@ function isRemoteDebuggingInChrome () {
   return __DEV__ && typeof global.nativeCallSyncHook === 'undefined'
 }
 
-if (typeof global.crypto !== 'object') {
-  global.crypto = {}
+export function seedSJCL (cb) {
+  // Not going to use sjcl for generation
 }
 
-if (typeof global.crypto.getRandomValues !== 'function') {
-  global.crypto.getRandomValues = getRandomValues
+function toBuffer (nativeStr) {
+  return Buffer.from(nativeStr, 'base64')
+}
+
+export function randomBytes (length, cb) {
+  if (!cb) {
+    if (length > 65536) {
+      throw new QuotaExceededError('Can only request a maximum of 65536 bytes')
+    }
+
+    return toBuffer(getRandomBase64(length))
+  }
+
+  try {
+    if (length > 65536) {
+      throw new QuotaExceededError('Can only request a maximum of 65536 bytes')
+    }
+
+    cb(null, toBuffer(getRandomBase64(length)))
+  } catch (err) {
+    cb(err)
+  }
 }
