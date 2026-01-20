@@ -3,6 +3,17 @@
   "version": "3.6.2",
   "license": "MIT",
   "repository": "madfish-solutions/react-native-randombytes",
+  "main": "index.js",
+  "source": "index.js",
+  "files": [
+    "index.js",
+    "index.web.js",
+    "android",
+    "ios",
+    "spec",
+    "react-native-get-random-values.podspec",
+    "react-native.config.js"
+  ],
   "dependencies": {
     "fast-base64-decode": "^1.0.0"
   },
